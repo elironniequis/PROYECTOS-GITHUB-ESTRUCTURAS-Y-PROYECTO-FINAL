@@ -1,0 +1,176 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Pino",
+        "description": "Un parque popular en el centro de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0218, -15.8383],
+            [-70.0215, -15.8380],
+            [-70.0212, -15.8383],
+            [-70.0215, -15.8386],
+            [-70.0218, -15.8383]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Huajsapata",
+        "description": "Parque con una gran vista panorámica de la ciudad de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0185, -15.8432],
+            [-70.0182, -15.8429],
+            [-70.0179, -15.8432],
+            [-70.0182, -15.8435],
+            [-70.0185, -15.8432]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Dante Nava",
+        "description": "Un pequeño parque en el centro de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0210, -15.8370],
+            [-70.0207, -15.8367],
+            [-70.0204, -15.8370],
+            [-70.0207, -15.8373],
+            [-70.0210, -15.8370]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Manuel Pino",
+        "description": "Parque ubicado en el barrio de Bellavista."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0265, -15.8480],
+            [-70.0262, -15.8477],
+            [-70.0259, -15.8480],
+            [-70.0262, -15.8483],
+            [-70.0265, -15.8480]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque El Periodista",
+        "description": "Parque dedicado a los periodistas de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0253, -15.8390],
+            [-70.0250, -15.8387],
+            [-70.0247, -15.8390],
+            [-70.0250, -15.8393],
+            [-70.0253, -15.8390]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque del Niño",
+        "description": "Un parque dedicado a los niños de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0240, -15.8410],
+            [-70.0237, -15.8407],
+            [-70.0234, -15.8410],
+            [-70.0237, -15.8413],
+            [-70.0240, -15.8410]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Grau",
+        "description": "Parque conmemorativo a Miguel Grau."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0230, -15.8420],
+            [-70.0227, -15.8417],
+            [-70.0224, -15.8420],
+            [-70.0227, -15.8423],
+            [-70.0230, -15.8420]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque de la Madre",
+        "description": "Parque dedicado a las madres de Puno."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0210, -15.8395],
+            [-70.0207, -15.8392],
+            [-70.0204, -15.8395],
+            [-70.0207, -15.8398],
+            [-70.0210, -15.8395]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque del Trabajo",
+        "description": "Parque que celebra el trabajo de los puneños."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-70.0220, -15.8400],
+            [-70.0217, -15.8397],
+            [-70.0214, -15.8400],
+            [-70.0217, -15.8403],
+            [-70.0220, -15.8400]
+          ]
+        ]
+      }
+    }
+  ]
+}

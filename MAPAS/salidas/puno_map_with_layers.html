@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_65f9d8c843f96720bb5bd0226c6f48c7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    
+                    <style>
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_65f9d8c843f96720bb5bd0226c6f48c7" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_65f9d8c843f96720bb5bd0226c6f48c7 = L.map(
+                "map_65f9d8c843f96720bb5bd0226c6f48c7",
+                {
+                    center: [-15.8402, -70.0158],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_c63a894ad0eb5a0c4b52c1f764976e50 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_c63a894ad0eb5a0c4b52c1f764976e50.addTo(map_65f9d8c843f96720bb5bd0226c6f48c7);
+        
+    
+
+        function geo_json_265a0908c0a4908dc9a061016f1d0145_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_265a0908c0a4908dc9a061016f1d0145 = L.geoJson(null, {
+                onEachFeature: geo_json_265a0908c0a4908dc9a061016f1d0145_onEachFeature,
+            
+        });
+
+        function geo_json_265a0908c0a4908dc9a061016f1d0145_add (data) {
+            geo_json_265a0908c0a4908dc9a061016f1d0145
+                .addData(data);
+        }
+            geo_json_265a0908c0a4908dc9a061016f1d0145_add({"features": [{"geometry": {"coordinates": [-70.0158, -15.8402], "type": "Point"}, "properties": {"description": "La principal estaci\u00f3n de transporte en Puno.", "name": "Estaci\u00f3n Central de Puno"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0176, -15.8361], "type": "Point"}, "properties": {"description": "Estaci\u00f3n de tren con servicios a Cusco y Arequipa.", "name": "Estaci\u00f3n Ferrocarril Puno"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.014, -15.8323], "type": "Point"}, "properties": {"description": "Principal terminal de autobuses en Puno.", "name": "Estaci\u00f3n de Autobuses Terminal Terrestre"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0223, -15.8367], "type": "Point"}, "properties": {"description": "Paradero importante en la Avenida Sim\u00f3n Bol\u00edvar.", "name": "Paradero 1 de Mayo"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.035, -15.861], "type": "Point"}, "properties": {"description": "Estaci\u00f3n en la carretera Puno - Desaguadero.", "name": "Estaci\u00f3n Laraqueri"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0195, -15.8234], "type": "Point"}, "properties": {"description": "Estaci\u00f3n de transporte en el distrito de Alto Puno.", "name": "Estaci\u00f3n Alto Puno"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0281, -15.848], "type": "Point"}, "properties": {"description": "Estaci\u00f3n en la zona de Bellavista.", "name": "Estaci\u00f3n Bellavista"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0227, -15.8521], "type": "Point"}, "properties": {"description": "Estaci\u00f3n en el barrio Chanu Chanu.", "name": "Estaci\u00f3n Chanu Chanu"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0276, -15.8423], "type": "Point"}, "properties": {"description": "Estaci\u00f3n en la urbanizaci\u00f3n Miraflores.", "name": "Estaci\u00f3n Miraflores"}, "type": "Feature"}, {"geometry": {"coordinates": [-70.0185, -15.8432], "type": "Point"}, "properties": {"description": "Estaci\u00f3n cerca del Parque Huajsapata.", "name": "Estaci\u00f3n Huajsapata"}, "type": "Feature"}], "type": "FeatureCollection"});
+        geo_json_265a0908c0a4908dc9a061016f1d0145.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+    geo_json_265a0908c0a4908dc9a061016f1d0145.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
+    let fields = ["name", "description"];
+    let aliases = ["name", "description"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{"className": "foliumpopup"});
+                     
+    
+            geo_json_265a0908c0a4908dc9a061016f1d0145.addTo(map_65f9d8c843f96720bb5bd0226c6f48c7);
+        
+    
+
+        function geo_json_371529a602da996b21199f2142bfac6b_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_371529a602da996b21199f2142bfac6b = L.geoJson(null, {
+                onEachFeature: geo_json_371529a602da996b21199f2142bfac6b_onEachFeature,
+            
+        });
+
+        function geo_json_371529a602da996b21199f2142bfac6b_add (data) {
+            geo_json_371529a602da996b21199f2142bfac6b
+                .addData(data);
+        }
+            geo_json_371529a602da996b21199f2142bfac6b_add({"features": [{"geometry": {"coordinates": [[[-70.0218, -15.8383], [-70.0215, -15.838], [-70.0212, -15.8383], [-70.0215, -15.8386], [-70.0218, -15.8383]]], "type": "Polygon"}, "properties": {"description": "Un parque popular en el centro de Puno.", "name": "Parque Pino"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.0185, -15.8432], [-70.0182, -15.8429], [-70.0179, -15.8432], [-70.0182, -15.8435], [-70.0185, -15.8432]]], "type": "Polygon"}, "properties": {"description": "Parque con una gran vista panor\u00e1mica de la ciudad de Puno.", "name": "Parque Huajsapata"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.021, -15.837], [-70.0207, -15.8367], [-70.0204, -15.837], [-70.0207, -15.8373], [-70.021, -15.837]]], "type": "Polygon"}, "properties": {"description": "Un peque\u00f1o parque en el centro de Puno.", "name": "Parque Dante Nava"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.0265, -15.848], [-70.0262, -15.8477], [-70.0259, -15.848], [-70.0262, -15.8483], [-70.0265, -15.848]]], "type": "Polygon"}, "properties": {"description": "Parque ubicado en el barrio de Bellavista.", "name": "Parque Manuel Pino"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.0253, -15.839], [-70.025, -15.8387], [-70.0247, -15.839], [-70.025, -15.8393], [-70.0253, -15.839]]], "type": "Polygon"}, "properties": {"description": "Parque dedicado a los periodistas de Puno.", "name": "Parque El Periodista"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.024, -15.841], [-70.0237, -15.8407], [-70.0234, -15.841], [-70.0237, -15.8413], [-70.024, -15.841]]], "type": "Polygon"}, "properties": {"description": "Un parque dedicado a los ni\u00f1os de Puno.", "name": "Parque del Ni\u00f1o"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.023, -15.842], [-70.0227, -15.8417], [-70.0224, -15.842], [-70.0227, -15.8423], [-70.023, -15.842]]], "type": "Polygon"}, "properties": {"description": "Parque conmemorativo a Miguel Grau.", "name": "Parque Grau"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.021, -15.8395], [-70.0207, -15.8392], [-70.0204, -15.8395], [-70.0207, -15.8398], [-70.021, -15.8395]]], "type": "Polygon"}, "properties": {"description": "Parque dedicado a las madres de Puno.", "name": "Parque de la Madre"}, "type": "Feature"}, {"geometry": {"coordinates": [[[-70.022, -15.84], [-70.0217, -15.8397], [-70.0214, -15.84], [-70.0217, -15.8403], [-70.022, -15.84]]], "type": "Polygon"}, "properties": {"description": "Parque que celebra el trabajo de los pune\u00f1os.", "name": "Parque del Trabajo"}, "type": "Feature"}], "type": "FeatureCollection"});
+        geo_json_371529a602da996b21199f2142bfac6b.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+    geo_json_371529a602da996b21199f2142bfac6b.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
+    let fields = ["name", "description"];
+    let aliases = ["name", "description"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{"className": "foliumpopup"});
+                     
+    
+            geo_json_371529a602da996b21199f2142bfac6b.addTo(map_65f9d8c843f96720bb5bd0226c6f48c7);
+        
+    
+            var layer_control_ffc94ce474fe924fad1dec1e55729f1c_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_c63a894ad0eb5a0c4b52c1f764976e50,
+                },
+                overlays :  {
+                    "Estaciones de Puno" : geo_json_265a0908c0a4908dc9a061016f1d0145,
+                    "Parques de Puno" : geo_json_371529a602da996b21199f2142bfac6b,
+                },
+            };
+            let layer_control_ffc94ce474fe924fad1dec1e55729f1c = L.control.layers(
+                layer_control_ffc94ce474fe924fad1dec1e55729f1c_layers.base_layers,
+                layer_control_ffc94ce474fe924fad1dec1e55729f1c_layers.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_65f9d8c843f96720bb5bd0226c6f48c7);
+
+        
+</script>
+</html>

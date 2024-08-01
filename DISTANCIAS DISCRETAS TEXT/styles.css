@@ -1,0 +1,27 @@
+/* Estilos personalizados */
+
+/* Estilos para el contenedor del árbol */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos para el formulario y resultados */
+.mb-4 {
+    margin-bottom: 20px;
+}
+
+/* Estilos para los nodos del árbol */
+.node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+/* Estilos para los enlaces del árbol */
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}

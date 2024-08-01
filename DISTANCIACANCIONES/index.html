@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbol VP de Canciones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="left-container">
+            <div id="song-list-container" class="song-container">
+                <h2>Lista de Canciones</h2>
+                <table id="song-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Características</th>
+                        </tr>
+                    </thead>
+                    <tbody id="song-list"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="right-container">
+            <div id="song-query-container" class="song-container">
+                <h2>Canción Consultada</h2>
+                <div id="queried-song"></div>
+            </div>
+            <div id="recommended-songs-container" class="song-container">
+                <h2>Canciones Recomendadas</h2>
+                <div id="recommended-songs"></div>
+            </div>
+        </div>
+    </div>
+    <script src="vptree.js"></script>
+    <script>
+        const canciones = [
+            { title: "Musica 1", features: [1, 2, 3] },
+            { title: "Musica 2", features: [4, 5, 6] },
+            { title: "Musica 3", features: [7, 8, 9] },
+            { title: "Musica 4", features: [2, 3, 4] },
+            { title: "Musica 5", features: [5, 6, 7] },
+            { title: "Musica 6", features: [6, 7, 8] },
+            { title: "Musica 7", features: [3, 4, 5] },
+            { title: "Musica 8", features: [7, 8, 9] },
+            { title: "Musica 9", features: [1, 3, 5] },
+            { title: "Musica 10", features: [2, 4, 6] },
+            { title: "Musica 11", features: [4, 5, 6] },
+            { title: "Musica 12", features: [7, 8, 10] },
+            { title: "Musica 13", features: [3, 5, 7] },
+            { title: "Musica 14", features: [6, 8, 9] },
+            { title: "Musica 15", features: [1, 2, 3] },
+            { title: "Musica 16", features: [4, 5, 7] },
+            { title: "Musica 17", features: [7, 8, 9] },
+            { title: "Musica 18", features: [2, 4, 5] },
+            { title: "Musica 19", features: [5, 6, 8] },
+            { title: "Musica 20", features: [6, 7, 9] },
+            
+        ];
+
+        const arbol = new ArbolVP(canciones, distanciaEuclidiana);
+
+        // Función para mostrar la lista de canciones
+        function mostrarListaCanciones(canciones) {
+            const songListContainer = document.getElementById("song-list");
+            canciones.forEach(cancion => {
+                const songRow = document.createElement("tr");
+                songRow.classList.add("song-item");
+                songRow.innerHTML = `<td>${cancion.title}</td><td>${cancion.features.join(', ')}</td>`;
+                songRow.addEventListener('click', () => {
+                    const recomendaciones = arbol.buscar(cancion, 5);
+                    mostrarCancionConsultada(cancion);
+                    mostrarRecomendaciones(recomendaciones);
+                });
+                songListContainer.appendChild(songRow);
+            });
+        }
+
+        // Función para mostrar una canción consultada y sus características
+        function mostrarCancionConsultada(cancion) {
+            const queriedSongContainer = document.getElementById("queried-song");
+            queriedSongContainer.innerHTML = ""; // Limpiar contenido previo
+            const queriedSongItem = document.createElement("div");
+            queriedSongItem.classList.add("song-item");
+            queriedSongItem.innerHTML = `<h3>${cancion.title}</h3><p>Características: ${cancion.features.join(', ')}</p>`;
+            queriedSongContainer.appendChild(queriedSongItem);
+        }
+
+        // Función para mostrar las canciones recomendadas
+        function mostrarRecomendaciones(recomendaciones) {
+            const recommendedSongsContainer = document.getElementById("recommended-songs");
+            recommendedSongsContainer.innerHTML = ""; // Limpiar contenido previo
+            recomendaciones.forEach(rec => {
+                const songItem = document.createElement("div");
+                songItem.classList.add("song-item");
+                songItem.innerHTML = `<h3>${rec.cancion.title}</h3><p>Distancia: ${rec.distancia.toFixed(2)}</p>`;
+                songItem.addEventListener('click', () => {
+                    const nuevasRecomendaciones = arbol.buscar(rec.cancion, 5);
+                    mostrarCancionConsultada(rec.cancion);
+                    mostrarRecomendaciones(nuevasRecomendaciones);
+                });
+                recommendedSongsContainer.appendChild(songItem);
+            });
+        }
+
+        // Mostrar la lista de canciones inicialmente
+        mostrarListaCanciones(canciones);
+    </script>
+</body>
+</html>

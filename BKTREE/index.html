@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Médico con BK-Tree</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-stethoscope"></i> Diagnóstico Médico con BK-Tree</h1>
+        <form id="symptomForm">
+            <div class="form-group">
+                <label for="symptoms">Seleccione hasta tres síntomas:</label>
+                <select id="symptoms" class="form-control" multiple size="10">
+                    <option value="fiebre">Fiebre</option>
+                    <option value="tos">Tos</option>
+                    <option value="dolor de cabeza">Dolor de cabeza</option>
+                    <option value="dolor de garganta">Dolor de garganta</option>
+                    <option value="fatiga">Fatiga</option>
+                    <option value="náusea">Náusea</option>
+                    <option value="dificultad para respirar">Dificultad para respirar</option>
+                    <option value="dolor muscular">Dolor muscular</option>
+                    <option value="dolor en el pecho">Dolor en el pecho</option>
+                    <option value="vómito">Vómito</option>
+                    <option value="escalofríos">Escalofríos</option>
+                    <option value="sudoración">Sudoración</option>
+                    <option value="pérdida de apetito">Pérdida de apetito</option>
+                    <option value="mareo">Mareo</option>
+                    <option value="dolor abdominal">Dolor abdominal</option>
+                    <option value="congestión nasal">Congestión nasal</option>
+                    <option value="pérdida de olfato">Pérdida de olfato</option>
+                    <option value="pérdida de gusto">Pérdida de gusto</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-custom btn-block" onclick="buscarEnfermedades()"><i class="fas fa-search"></i> Buscar Posibles Enfermedades</button>
+        </form>
+        <div class="results" id="results"></div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

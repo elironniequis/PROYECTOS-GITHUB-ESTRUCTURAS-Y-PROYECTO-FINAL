@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas de Proximidad con KD-Tree</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1, h2 {
+            text-align: center;
+        }
+        
+        .input-section, .query-section, .remove-section {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            margin: 5px;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .points-list, .results {
+            margin-top: 20px;
+        }
+        
+        .chart-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consultas de Proximidad con KD-Tree</h1>
+        <div class="input-section">
+            <h2>Agregar Puntos</h2>
+            <label for="points">Puntos (formato: x1,y1;x2,y2;...):</label>
+            <input type="text" id="points" required>
+            <button onclick="addPoints()">Agregar Puntos</button>
+        </div>
+        <div class="points-list">
+            <h2>Puntos</h2>
+            <ul id="points-list">
+                <!-- Lista de puntos agregados -->
+            </ul>
+        </div>
+        <div class="query-section">
+            <h2>Consulta de Proximidad</h2>
+            <label for="qx">X de Consulta:</label>
+            <input type="number" id="qx" required>
+            <label for="qy">Y de Consulta:</label>
+            <input type="number" id="qy" required>
+            <label for="k">K Vecinos:</label>
+            <input type="number" id="k" value="1" min="1" required>
+            <button onclick="performQuery()">Realizar Consulta</button>
+        </div>
+        <div class="remove-section">
+            <h2>Eliminar Punto</h2>
+            <label for="rx">X:</label>
+            <input type="number" id="rx" required>
+            <label for="ry">Y:</label>
+            <input type="number" id="ry" required>
+            <button onclick="removePoint()">Eliminar Punto</button>
+        </div>
+        <div class="results">
+            <h2>Resultados</h2>
+            <ul id="results-list">
+                <!-- Resultados de la consulta -->
+            </ul>
+        </div>
+        <div class="chart-container">
+            <canvas id="chart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <script>
+    class KDNode {
+        constructor(point, axis, left = null, right = null) {
+            this.point = point;
+            this.axis = axis;
+            this.left = left;
+            this.right = right;
+        }
+    }
+    
+    let points = [];
+    let kdTree = null;
+    let chart = null;
+    
+    function buildKDTree(points, depth = 0) {
+        if (points.length === 0) {
+            return null;
+        }
+    
+        const axis = depth % 2;
+        points.sort((a, b) => a[axis] - b[axis]);
+        const medianIndex = Math.floor(points.length / 2);
+        const medianPoint = points[medianIndex];
+    
+        return new KDNode(
+            medianPoint,
+            axis,
+            buildKDTree(points.slice(0, medianIndex), depth + 1),
+            buildKDTree(points.slice(medianIndex + 1), depth + 1)
+        );
+    }
+    
+    function distanceSquared(point1, point2) {
+        return (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2;
+    }
+    
+    function nearestNeighbor(node, target, depth = 0, best = null) {
+        if (node === null) {
+            return best;
+        }
+    
+        const axis = depth % 2;
+        const nextBest = best === null || distanceSquared(target, node.point) < distanceSquared(target, best.point) ? node : best;
+        const nextDepth = depth + 1;
+    
+        let nextNode = null;
+        let oppositeNode = null;
+    
+        if (target[axis] < node.point[axis]) {
+            nextNode = node.left;
+            oppositeNode = node.right;
+        } else {
+            nextNode = node.right;
+            oppositeNode = node.left;
+        }
+    
+        best = nearestNeighbor(nextNode, target, nextDepth, nextBest);
+    
+        if (distanceSquared(target, best.point) > (target[axis] - node.point[axis]) ** 2) {
+            best = nearestNeighbor(oppositeNode, target, nextDepth, best);
+        }
+    
+        return best;
+    }
+    
+    function kNearestNeighbors(node, target, k, depth = 0, heap = []) {
+        if (node === null) {
+            return heap;
+        }
+    
+        const axis = depth % 2;
+        const distance = distanceSquared(target, node.point);
+    
+        if (heap.length < k) {
+            heap.push({ node: node, distance: distance });
+            heap.sort((a, b) => a.distance - b.distance);
+        } else if (distance < heap[heap.length - 1].distance) {
+            heap[heap.length - 1] = { node: node, distance: distance };
+            heap.sort((a, b) => a.distance - b.distance);
+        }
+    
+        const nextNode = target[axis] < node.point[axis] ? node.left : node.right;
+        const oppositeNode = target[axis] < node.point[axis] ? node.right : node.left;
+    
+        heap = kNearestNeighbors(nextNode, target, k, depth + 1, heap);
+    
+        if (heap.length < k || Math.abs(target[axis] - node.point[axis]) ** 2 < heap[heap.length - 1].distance) {
+            heap = kNearestNeighbors(oppositeNode, target, k, depth + 1, heap);
+        }
+    
+        return heap;
+    }
+    
+    function addPoints() {
+        const pointsInput = document.getElementById('points').value.trim();
+        if (!pointsInput) {
+            alert('Por favor, ingresa puntos.');
+            return;
+        }
+    
+        const newPoints = pointsInput.split(';').map(point => point.split(',').map(Number));
+        points.push(...newPoints);
+        kdTree = buildKDTree(points);
+    
+        updatePointsList();
+        updateChart();
+    }
+    
+    function removePoint() {
+        const x = parseFloat(document.getElementById('rx').value);
+        const y = parseFloat(document.getElementById('ry').value);
+        points = points.filter(point => point[0] !== x || point[1] !== y);
+        kdTree = buildKDTree(points);
+    
+        updatePointsList();
+        updateChart();
+    }
+    
+    function performQuery() {
+        const qx = parseFloat(document.getElementById('qx').value);
+        const qy = parseFloat(document.getElementById('qy').value);
+        const k = parseInt(document.getElementById('k').value);
+    
+        const nearest = nearestNeighbor(kdTree, [qx, qy]);
+        const kNearest = kNearestNeighbors(kdTree, [qx, qy], k);
+    
+        const resultsList = document.getElementById('results-list');
+        resultsList.innerHTML = '';
+    
+        if (nearest) {
+            const nearestLi = document.createElement('li');
+            nearestLi.textContent = `Vecino más cercano: (${nearest.point[0]}, ${nearest.point[1]})`;
+            resultsList.appendChild(nearestLi);
+        }
+    
+        kNearest.forEach((result, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}: (${result.node.point[0]}, ${result.node.point[1]})`;
+            resultsList.appendChild(li);
+        });
+    
+        updateChart([qx, qy], kNearest.map(result => result.node.point));
+    }
+    
+    function updatePointsList() {
+        const pointsList = document.getElementById('points-list');
+        pointsList.innerHTML = '';
+        points.forEach(point => {
+            const li = document.createElement('li');
+            li.textContent = `(${point[0]}, ${point[1]})`;
+            pointsList.appendChild(li);
+        });
+    }
+    
+    function updateChart(queryPoint = null, neighbors = []) {
+        const ctx = document.getElementById('chart').getContext('2d');
+        const data = {
+            datasets: [{
+                label: 'Puntos',
+                data: points.map(p => ({ x: p[0], y: p[1] })),
+                backgroundColor: 'blue'
+            }]
+        };
+    
+        if (queryPoint) {
+            data.datasets.push({
+                label: 'Punto de Consulta',
+                data: [{ x: queryPoint[0], y: queryPoint[1] }],
+                backgroundColor: 'red'
+            });
+        }
+    
+        if (neighbors.length > 0) {
+            data.datasets.push({
+                label: 'Vecinos más Cercanos',
+                data: neighbors.map(p => ({ x: p[0], y: p[1] })),
+                backgroundColor: 'green'
+            });
+        }
+    
+        if (chart) {
+            chart.destroy();
+        }
+    
+        chart = new Chart(ctx, {
+            type: 'scatter',
+            data: data,
+            options: {
+                scales: {
+                    x: { type: 'linear', position: 'bottom' },
+                    y: { type: 'linear', position: 'left' }
+                }
+            }
+        });
+    }
+    </script>
+</body>
+</html>

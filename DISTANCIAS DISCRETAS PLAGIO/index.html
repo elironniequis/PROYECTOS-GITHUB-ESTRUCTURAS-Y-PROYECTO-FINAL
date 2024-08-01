@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detección de Plagio con Árbol BK</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detección de Plagio con Árbol BK</h1>
+    <div>
+        <label for="text1">Texto 1:</label><br>
+        <textarea id="text1"></textarea>
+    </div>
+    <div>
+        <label for="text2">Texto 2:</label><br>
+        <textarea id="text2"></textarea>
+    </div>
+    <button onclick="detectarPlagio()">Detectar Plagio</button>
+    <div id="result"></div>
+
+    <script src="bktree.js"></script>
+</body>
+</html>

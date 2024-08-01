@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similitud de Imágenes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Medición de la Similitud de Imágenes</h1>
+        <p>Sube dos imágenes para calcular su similitud utilizando histogramas de color.</p>
+        <div class="image-inputs">
+            <div class="image-container">
+                <input type="file" id="image1" accept="image/*" onchange="previewImage(event, 'preview1')">
+                <img id="preview1" class="preview">
+            </div>
+            <div class="image-container">
+                <input type="file" id="image2" accept="image/*" onchange="previewImage(event, 'preview2')">
+                <img id="preview2" class="preview">
+            </div>
+        </div>
+        <button onclick="calculateSimilarity()">Calcular Similitud</button>
+        <div id="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

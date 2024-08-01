@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocalización de Restaurantes en Perú</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <h1>Geolocalización de Restaurantes en Perú</h1>
+    </header>
+    <main>
+        <div id="map"></div>
+        <form id="search-form">
+            <label for="restaurant-select">Selecciona un restaurante:</label>
+            <select id="restaurant-select">
+                <!-- Los restaurantes se añadirán dinámicamente aquí -->
+            </select>
+            <button type="submit">Mostrar en el mapa</button>
+        </form>
+        <div id="restaurant-info">
+            <!-- Información del restaurante se mostrará aquí -->
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Geolocalización de Restaurantes en Perú</p>
+    </footer>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

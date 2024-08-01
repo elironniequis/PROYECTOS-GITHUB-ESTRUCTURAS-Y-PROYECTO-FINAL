@@ -1,0 +1,22 @@
+/* styles.css */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+}
+
+canvas {
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+
+button {
+    margin: 5px;
+}

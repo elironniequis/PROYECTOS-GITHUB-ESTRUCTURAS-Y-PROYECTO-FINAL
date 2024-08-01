@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbol VP para Canciones Similares</title>
+    <!-- Enlace a la hoja de estilos de Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilo básico para el cuerpo del documento */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        /* Estilo para el encabezado */
+        header {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        /* Estilo para el contenido principal */
+        main {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        /* Estilo para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Estilo para el formulario */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="number"], button {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo para los resultados */
+        #result {
+            margin: 20px 0;
+        }
+
+        #result ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #result li {
+            background-color: #e7f3fe;
+            margin: 5px 0;
+            padding: 10px;
+            border-left: 6px solid #2196F3;
+        }
+
+        /* Estilo para los iconos */
+        .icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-music"></i> Árbol VP para Canciones Similares</h1>
+    </header>
+    <main>
+        <h2>Características de las Canciones</h2>
+        <table id="songsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tempo</th>
+                    <th>Pitch</th>
+                    <th>Duración</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Ingresar Canción para Búsqueda de Similitud</h2>
+        <form id="searchForm">
+            <label for="songId"><i class="fas fa-id-badge icon"></i>ID: </label>
+            <input type="number" id="songId" name="songId" required>
+            <label for="tempo"><i class="fas fa-tachometer-alt icon"></i>Tempo: </label>
+            <input type="number" id="tempo" name="tempo" required>
+            <label for="pitch"><i class="fas fa-music icon"></i>Pitch: </label>
+            <input type="number" id="pitch" name="pitch" required>
+            <label for="duracion"><i class="fas fa-clock icon"></i>Duración: </label>
+            <input type="number" id="duracion" name="duracion" required>
+            <button type="submit"><i class="fas fa-search icon"></i>Buscar Canciones Similares</button>
+        </form>
+
+        <h2>Resultados de Búsqueda</h2>
+        <div id="result"></div>
+    </main>
+    <script src="vptree.js"></script>
+    <script>
+        // Define las características de las canciones
+        const songs = [
+            { id: 1, features: [120, 55, 210] }, // [tempo, pitch, duración]
+            { id: 2, features: [130, 60, 200] },
+            { id: 3, features: [110, 53, 180] },
+            { id: 4, features: [125, 58, 240] },
+            { id: 5, features: [140, 65, 220] },
+            { id: 6, features: [115, 50, 230] },
+            { id: 7, features: [135, 63, 210] },
+            { id: 8, features: [145, 70, 220] },
+            { id: 9, features: [118, 52, 205] },
+            { id: 10, features: [132, 60, 225] },
+            { id: 11, features: [128, 55, 215] },
+            { id: 12, features: [138, 62, 235] },
+            { id: 13, features: [121, 54, 210] },
+            { id: 14, features: [133, 61, 220] },
+            { id: 15, features: [127, 58, 200] },
+            { id: 16, features: [142, 66, 240] },
+            { id: 17, features: [113, 50, 190] },
+            { id: 18, features: [137, 64, 230] },
+            { id: 19, features: [122, 56, 212] },
+            { id: 20, features: [134, 62, 222] }
+        ];
+
+        // Mostrar las características de las canciones en una tabla
+        const songsTable = document.getElementById('songsTable').getElementsByTagName('tbody')[0];
+        songs.forEach(song => {
+            const row = songsTable.insertRow();
+            row.insertCell(0).textContent = song.id;
+            row.insertCell(1).textContent = song.features[0];
+            row.insertCell(2).textContent = song.features[1];
+            row.insertCell(3).textContent = song.features[2];
+        });
+
+        // Crear el Árbol VP
+        const arbol = new ArbolVP(songs, distanciaEuclidiana);
+
+        // Manejar el evento de envío del formulario
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const songId = parseInt(document.getElementById('songId').value);
+            const tempo = parseInt(document.getElementById('tempo').value);
+            const pitch = parseInt(document.getElementById('pitch').value);
+            const duracion = parseInt(document.getElementById('duracion').value);
+
+            // Crear una canción de consulta con los valores ingresados
+            const querySong = { id: songId, features: [tempo, pitch, duracion] };
+            const maxResults = 5; // Definir el número máximo de resultados
+
+            // Encontrar canciones similares
+            const similarSongs = arbol.buscar(querySong, maxResults);
+
+            // Mostrar los resultados de la búsqueda
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>Canción de Consulta</h3>';
+            resultDiv.innerHTML += `<p>ID: ${querySong.id}, Tempo: ${querySong.features[0]}, Pitch: ${querySong.features[1]}, Duración: ${querySong.features[2]}</p>`;
+            resultDiv.innerHTML += '<h3>Canciones Recomendadas</h3>';
+            resultDiv.innerHTML += '<ul>';
+            similarSongs.forEach(({ cancion, distancia }) => {
+                resultDiv.innerHTML += `<li>ID: ${cancion.id}, Tempo: ${cancion.features[0]}, Pitch: ${cancion.features[1]}, Duración: ${cancion.features[2]} (Distancia: ${distancia.toFixed(2)})</li>`;
+            });
+            resultDiv.innerHTML += '</ul>';
+        });
+    </script>
+</body>
+</html>

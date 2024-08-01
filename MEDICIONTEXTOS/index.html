@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similitud de Palabras</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Medición de la Similitud de Palabras</h1>
+        <p>Ingresa dos palabras para calcular su similitud utilizando la distancia de Levenshtein.</p>
+        <input type="text" id="word1" placeholder="Primera palabra">
+        <input type="text" id="word2" placeholder="Segunda palabra">
+        <button onclick="calculateSimilarity()">Calcular Similitud</button>
+        <div id="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

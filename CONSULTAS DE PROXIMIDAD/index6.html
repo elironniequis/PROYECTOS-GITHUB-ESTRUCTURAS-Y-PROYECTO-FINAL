@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Avanzado de Consultas de Proximidad con KD-Tree</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        #map {
+            height: 800px;
+            width: 100%;
+        }
+        .list-group {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Consultas de Proximidad con KD-Tree</h1>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Agregar Puntos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" id="points" class="form-control" placeholder="Formato: x1,y1;x2,y2;..." required>
+                            <button class="btn btn-primary" onclick="addPoints()">Agregar</button>
+                        </div>
+                        <small class="form-text text-muted">Ingresa los puntos en el formato x,y separados por punto y coma. Ejemplo: 1,2;3,4;5,6</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Importar/Exportar Datos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input class="form-control" type="file" id="fileInput" accept=".csv">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" onclick="importCSV()">Importar CSV</button>
+                            <button class="btn btn-info" onclick="exportCSV()">Exportar a CSV</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Consulta de Proximidad</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="number" id="qx" class="form-control" placeholder="Latitud de Consulta" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" id="qy" class="form-control" placeholder="Longitud de Consulta" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" id="k" class="form-control" value="1" min="1" placeholder="K Vecinos" required>
+                        </div>
+                        <div class="mb-3">
+                            <select id="distanceMetric" class="form-select">
+                                <option value="euclidean">Distancia Euclidiana</option>
+                                <option value="manhattan">Distancia Manhattan</option>
+                            </select>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" onclick="performQuery()">Realizar Consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Eliminar Punto</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="number" id="rx" class="form-control" placeholder="Latitud" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" id="ry" class="form-control" placeholder="Longitud" required>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-danger" onclick="removePoint()">Eliminar Punto</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Puntos</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoUpdateToggle" checked>
+                            <label class="form-check-label" for="autoUpdateToggle">Auto-actualizar</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul id="points-list" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Resultados</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul id="results-list" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">Mapa</h5>
+            </div>
+            <div class="card-body">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        class KDNode {
+            constructor(point, axis, left = null, right = null) {
+                this.point = point;
+                this.axis = axis;
+                this.left = left;
+                this.right = right;
+            }
+        }
+        
+        let points = [];
+        let kdTree = null;
+        let map = null;
+        let markers = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            map = L.map('map').setView([0, 0], 2); // Set the initial view of the map
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+        });
+        
+        function buildKDTree(points, depth = 0) {
+            if (points.length === 0) {
+                return null;
+            }
+        
+            const axis = depth % 2;
+            points.sort((a, b) => a[axis] - b[axis]);
+            const medianIndex = Math.floor(points.length / 2);
+            const medianPoint = points[medianIndex];
+        
+            return new KDNode(
+                medianPoint,
+                axis,
+                buildKDTree(points.slice(0, medianIndex), depth + 1),
+                buildKDTree(points.slice(medianIndex + 1), depth + 1)
+            );
+        }
+        
+        function distance(point1, point2, metric = 'euclidean') {
+            if (metric === 'euclidean') {
+                return Math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2);
+            } else if (metric === 'manhattan') {
+                return Math.abs(point1[0] - point2[0]) + Math.abs(point1[1] - point2[1]);
+            }
+        }
+        
+        function nearestNeighbor(node, target, depth = 0, best = null, metric = 'euclidean') {
+            if (node === null) {
+                return best;
+            }
+        
+            const axis = depth % 2;
+            const nextBest = best === null || distance(target, node.point, metric) < distance(target, best.point, metric) ? node : best;
+            const nextDepth = depth + 1;
+        
+            let nextBranch = null;
+            let oppositeBranch = null;
+        
+            if (target[axis] < node.point[axis]) {
+                nextBranch = node.left;
+                oppositeBranch = node.right;
+            } else {
+                nextBranch = node.right;
+                oppositeBranch = node.left;
+            }
+        
+            best = nearestNeighbor(nextBranch, target, nextDepth, nextBest, metric);
+        
+            if (distance(target, best.point, metric) > Math.abs(target[axis] - node.point[axis])) {
+                best = nearestNeighbor(oppositeBranch, target, nextDepth, best, metric);
+            }
+        
+            return best;
+        }
+        
+        function kNearestNeighbors(node, target, k, depth = 0, best = [], metric = 'euclidean') {
+            if (node === null) {
+                return best;
+            }
+        
+            const axis = depth % 2;
+            const dist = distance(target, node.point, metric);
+            if (best.length < k || dist < distance(target, best[best.length - 1].point, metric)) {
+                best.push(node);
+                best.sort((a, b) => distance(target, a.point, metric) - distance(target, b.point, metric));
+                if (best.length > k) {
+                    best.pop();
+                }
+            }
+        
+            const nextBranch = target[axis] < node.point[axis] ? node.left : node.right;
+            const oppositeBranch = target[axis] < node.point[axis] ? node.right : node.left;
+        
+            best = kNearestNeighbors(nextBranch, target, k, depth + 1, best, metric);
+        
+            if (best.length < k || Math.abs(target[axis] - node.point[axis]) < distance(target, best[best.length - 1].point, metric)) {
+                best = kNearestNeighbors(oppositeBranch, target, k, depth + 1, best, metric);
+            }
+        
+            return best;
+        }
+        
+        function addPoints() {
+            const input = document.getElementById('points').value;
+            if (input.trim() === '') return;
+        
+            const newPoints = input.split(';').map(pair => pair.split(',').map(Number));
+            points.push(...newPoints);
+            kdTree = buildKDTree(points);
+            updatePointList();
+            updateMapMarkers();
+        }
+        
+        function removePoint() {
+            const rx = parseFloat(document.getElementById('rx').value);
+            const ry = parseFloat(document.getElementById('ry').value);
+        
+            points = points.filter(point => !(point[0] === rx && point[1] === ry));
+            kdTree = buildKDTree(points);
+            updatePointList();
+            updateMapMarkers();
+        }
+        
+        function performQuery() {
+            const qx = parseFloat(document.getElementById('qx').value);
+            const qy = parseFloat(document.getElementById('qy').value);
+            const k = parseInt(document.getElementById('k').value);
+            const metric = document.getElementById('distanceMetric').value;
+        
+            const results = kNearestNeighbors(kdTree, [qx, qy], k, 0, [], metric);
+            updateResultList(results);
+            highlightResultsOnMap(results);
+        }
+        
+        function updatePointList() {
+            const list = document.getElementById('points-list');
+            list.innerHTML = '';
+            points.forEach(point => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = `(${point[0]}, ${point[1]})`;
+                list.appendChild(listItem);
+            });
+        }
+        
+        function updateResultList(results) {
+            const list = document.getElementById('results-list');
+            list.innerHTML = '';
+            results.forEach(result => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = `(${result.point[0]}, ${result.point[1]})`;
+                list.appendChild(listItem);
+            });
+        }
+        
+        function updateMapMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = points.map(point => L.marker([point[0], point[1]]).addTo(map));
+        }
+        
+        function highlightResultsOnMap(results) {
+            markers.forEach(marker => map.removeLayer(marker));
+            updateMapMarkers();
+            results.forEach(result => {
+                const resultMarker = L.marker([result.point[0], result.point[1]], {
+                    icon: L.icon({
+                        iconUrl: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32],
+                    }),
+                }).addTo(map);
+                markers.push(resultMarker);
+            });
+        }
+        
+        function importCSV() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+        
+            if (file) {
+                Papa.parse(file, {
+                    complete: function(results) {
+                        const newPoints = results.data.map(row => row.map(Number));
+                        points.push(...newPoints);
+                        kdTree = buildKDTree(points);
+                        updatePointList();
+                        updateMapMarkers();
+                    }
+                });
+            }
+        }
+        
+        function exportCSV() {
+            const csv = Papa.unparse(points);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'points.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
